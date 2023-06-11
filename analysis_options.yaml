@@ -1,0 +1,12 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    todo: ignore # allow having TODOs in the code
+    missing_required_param: warning # treat missing required parameters as a warning (not a hint)
+    missing_return: warning # treat missing returns as a warning (not a hint)
+  exclude:
+    - "lib/**/*.g.dart"
+
+linter:
+  rules:
