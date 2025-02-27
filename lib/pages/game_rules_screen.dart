@@ -17,7 +17,7 @@ class GameRulesScreen extends StatefulWidget {
 }
 
 class _GameRulesScreenState extends State<GameRulesScreen> {
-  late final PageController _controller = PageController();
+  late final _controller = PageController();
 
   @override
   void dispose() {
@@ -28,6 +28,7 @@ class _GameRulesScreenState extends State<GameRulesScreen> {
   @override
   Widget build(BuildContext context) {
     var palette = context.read<Palette>();
+
     return Scaffold(
       backgroundColor: palette.background4,
       body: ResponsiveScreen(
@@ -46,14 +47,11 @@ class _GameRulesScreenState extends State<GameRulesScreen> {
         bottomSlot: RoughButton(
           drawRectangle: true,
           onTap: () {
-            if (_controller.page == 5) {
-              _onClose();
-            } else {
-              _controller.nextPage(
-                duration: const Duration(milliseconds: 700),
-                curve: Curves.easeInBack,
-              );
-            }
+            if (_controller.page == 5) return _onClose();
+            _controller.nextPage(
+              duration: const Duration(milliseconds: 700),
+              curve: Curves.easeInBack,
+            );
           },
           child: RotatedBox(
             quarterTurns: 2,
@@ -90,13 +88,9 @@ class _GameRulesScreenState extends State<GameRulesScreen> {
 }
 
 extension on _GameRulesScreenState {
-  void _onClose() {
-    if (widget.level == -1) {
-      context.pop();
-    } else {
-      PlaySessionRoute(level: widget.level).go(context);
-    }
-  }
+  void _onClose() => widget.level == -1
+      ? context.pop()
+      : PlaySessionRoute(level: widget.level).go(context);
 }
 
 const _rules = [

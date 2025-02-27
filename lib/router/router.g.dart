@@ -7,12 +7,12 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-      $mainAppRoute,
+      $menuRoute,
     ];
 
-RouteBase get $mainAppRoute => GoRouteData.$route(
+RouteBase get $menuRoute => GoRouteData.$route(
       path: '/',
-      factory: $MainAppRouteExtension._fromState,
+      factory: $MenuRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'settings/:level',
@@ -39,8 +39,8 @@ RouteBase get $mainAppRoute => GoRouteData.$route(
       ],
     );
 
-extension $MainAppRouteExtension on MainAppRoute {
-  static MainAppRoute _fromState(GoRouterState state) => const MainAppRoute();
+extension $MenuRouteExtension on MenuRoute {
+  static MenuRoute _fromState(GoRouterState state) => const MenuRoute();
 
   String get location => GoRouteData.$location(
         '/',

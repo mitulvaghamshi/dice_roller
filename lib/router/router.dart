@@ -1,11 +1,11 @@
-import 'package:dice_roller/models/game_levels.dart';
-import 'package:dice_roller/models/game_score.dart';
-import 'package:dice_roller/screens/game_rules_screen.dart';
-import 'package:dice_roller/screens/level_selection_screen.dart';
-import 'package:dice_roller/screens/main_menu_screen.dart';
-import 'package:dice_roller/screens/play_session_screen.dart';
-import 'package:dice_roller/screens/settings_screen.dart';
-import 'package:dice_roller/screens/win_game_screen.dart';
+import 'package:dice_roller/pages/game_rules_screen.dart';
+import 'package:dice_roller/pages/level_selection_screen.dart';
+import 'package:dice_roller/pages/menu_screen.dart';
+import 'package:dice_roller/pages/play_session_screen.dart';
+import 'package:dice_roller/pages/settings_screen.dart';
+import 'package:dice_roller/pages/win_game_screen.dart';
+import 'package:dice_roller/src/models/game_levels.dart';
+import 'package:dice_roller/src/models/game_score.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/my_transition.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 part 'router.g.dart';
 
-@TypedGoRoute<MainAppRoute>(path: '/', routes: <TypedGoRoute<GoRouteData>>[
+@TypedGoRoute<MenuRoute>(path: '/', routes: <TypedGoRoute<GoRouteData>>[
   TypedGoRoute<SettingsRoute>(path: 'settings/:level'),
   TypedGoRoute<GameRulesRoute>(path: 'gamerules/:level'),
   TypedGoRoute<PlayRoute>(path: 'play', routes: [
@@ -23,13 +23,11 @@ part 'router.g.dart';
   ]),
 ])
 @immutable
-class MainAppRoute extends GoRouteData {
-  const MainAppRoute();
+class MenuRoute extends GoRouteData {
+  const MenuRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MainMenuScreen(key: Key('main-menu-screen'));
-  }
+  Widget build(BuildContext context, GoRouterState state) => const MenuScreen();
 }
 
 @immutable
@@ -42,10 +40,7 @@ class GameRulesRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().background4,
-      child: GameRulesScreen(
-        key: const Key('game-rules-screen'),
-        level: level,
-      ),
+      child: GameRulesScreen(level: level),
     );
   }
 }
@@ -60,7 +55,7 @@ class SettingsRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().backgroundSettings,
-      child: SettingsScreen(key: const Key('settings-screen'), level: level),
+      child: SettingsScreen(level: level),
     );
   }
 }
@@ -73,7 +68,7 @@ class PlayRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().backgroundLevelSelection,
-      child: const LevelSelectionScreen(key: Key('level-selection-screen')),
+      child: const LevelSelectionScreen(),
     );
   }
 }
@@ -86,12 +81,10 @@ class PlaySessionRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
+    var gameLevel = gameLevels.singleWhere((e) => e.level == level);
     return buildTransition(
       color: context.read<Palette>().backgroundPlaySession,
-      child: PlaySessionScreen(
-        key: const Key('play-session-screen'),
-        level: gameLevels.singleWhere((e) => e.number == level),
-      ),
+      child: PlaySessionScreen(level: gameLevel),
     );
   }
 }
@@ -104,10 +97,7 @@ class WinGameRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().background4,
-      child: WinGameScreen(
-        key: const Key('win-game-screen'),
-        score: state.extra! as GameScore,
-      ),
+      child: WinGameScreen(score: state.extra! as GameScore),
     );
   }
 }

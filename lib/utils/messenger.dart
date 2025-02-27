@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Use this when creating [MaterialApp] if you want [showSnackBar] to work.
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey(debugLabel: 'scaffoldMessengerKey');
+    GlobalKey(debugLabel: '[DiceGame]:scaffoldMessengerKey');
 
 void showBanner(String message) {
   var messenger = scaffoldMessengerKey.currentState;
@@ -24,28 +24,33 @@ void showSnackBar(String message) {
   messenger?.showSnackBar(SnackBar(content: Text(message)));
 }
 
-void showErrorbar(String errorMessage, {SnackBarAction? action}) {
+void showErrorbar(String message, {SnackBarAction? action}) {
   var palette = Palette();
-  var richText = RichText(
-    text: TextSpan(children: [
-      TextSpan(
-        text: 'Error: ',
-        style: TextStyle(color: palette.redPen, fontWeight: FontWeight.bold),
-      ),
-      TextSpan(text: errorMessage, style: TextStyle(color: palette.ink)),
-    ]),
-  );
-  var snackBar = SnackBar(
-    action: action,
-    content: richText,
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: palette.backgroundMain,
-    dismissDirection: DismissDirection.horizontal,
-    margin: const EdgeInsets.only(bottom: 30, left: 24, right: 24),
-    duration: Duration(milliseconds: errorMessage.characters.length * 120),
-  );
-
   scaffoldMessengerKey.currentState
     ?..hideCurrentSnackBar()
-    ..showSnackBar(snackBar);
+    ..showSnackBar(
+      SnackBar(
+        action: action,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: palette.backgroundMain.dark,
+        dismissDirection: DismissDirection.horizontal,
+        margin: const EdgeInsets.only(bottom: 30, left: 24, right: 24),
+        duration: Duration(milliseconds: message.characters.length * 120),
+        content: RichText(
+          text: TextSpan(children: [
+            TextSpan(
+              text: 'Error: ',
+              style: TextStyle(
+                color: palette.redPen,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: message,
+              style: TextStyle(color: palette.ink),
+            ),
+          ]),
+        ),
+      ),
+    );
 }

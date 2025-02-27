@@ -1,4 +1,4 @@
-import 'package:dice_roller/persistence/settings_controller.dart';
+import 'package:dice_roller/src/controllers/settings_controller.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +11,7 @@ class NameDialog extends StatefulWidget {
 
   final Animation<double> animation;
 
-  static Future<void> show(context) async => showGeneralDialog(
+  static Future<void> show(context) async => await showGeneralDialog(
       context: context,
       pageBuilder: (_, animation, __) => NameDialog(animation: animation));
 

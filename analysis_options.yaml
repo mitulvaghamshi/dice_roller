@@ -2,7 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   errors:
-    todo: ignore # allow having TODOs in the code
+    # todo: ignore # allow having TODOs in the code
     missing_required_param: warning # treat missing required parameters as a warning (not a hint)
     missing_return: warning # treat missing returns as a warning (not a hint)
   exclude:
@@ -10,3 +10,7 @@ analyzer:
 
 linter:
   rules:
+    prefer_single_quotes: true
+    prefer_const_declarations: true
+    prefer_const_constructors: true
+    avoid_redundant_argument_values: true

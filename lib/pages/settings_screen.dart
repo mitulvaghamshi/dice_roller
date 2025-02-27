@@ -1,8 +1,8 @@
-import 'package:dice_roller/persistence/progress_controller.dart';
-import 'package:dice_roller/persistence/settings_controller.dart';
 import 'package:dice_roller/router/router.dart';
+import 'package:dice_roller/src/controllers/progress_controller.dart';
+import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/utils/messenger.dart';
 import 'package:dice_roller/utils/palette.dart';
-import 'package:dice_roller/utils/snack_bar.dart';
 import 'package:dice_roller/widgets/name_dialog.dart';
 import 'package:dice_roller/widgets/responsive_screen.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
@@ -20,20 +20,18 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var settings = context.watch<SettingsController>();
     var palette = context.read<Palette>();
-    const spacer60 = SizedBox(height: 60);
-    const spacer16 = SizedBox(height: 16);
 
     return Scaffold(
       backgroundColor: palette.backgroundSettings,
       body: ResponsiveScreen(
         mainSlot: ListView(children: [
-          spacer60,
+          const SizedBox(height: 60),
           const Text(
             'Settings',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 55, height: 1),
           ),
-          spacer60,
+          const SizedBox(height: 60),
           ValueListenableBuilder<String>(
             valueListenable: settings.playerName,
             builder: (_, name, child) => RoughButton(
@@ -41,22 +39,16 @@ class SettingsScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Player name',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    "'$name'",
-                    style: const TextStyle(fontSize: 20),
-                  ),
+                  const Text('Player name', style: TextStyle(fontSize: 20)),
+                  Text("'$name'", style: const TextStyle(fontSize: 20)),
                 ],
               ),
             ),
           ),
-          spacer16,
+          const SizedBox(height: 16),
           ValueListenableBuilder<bool>(
             valueListenable: settings.soundsOn,
-            builder: (context, soundsOn, child) => RoughButton(
+            builder: (_, soundsOn, child) => RoughButton(
               onTap: settings.toggleSoundsOn,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,10 +59,10 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
-          spacer16,
+          const SizedBox(height: 16),
           ValueListenableBuilder<bool>(
             valueListenable: settings.musicOn,
-            builder: (context, musicOn, child) => RoughButton(
+            builder: (_, musicOn, child) => RoughButton(
               onTap: settings.toggleMusicOn,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,11 +73,11 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
-          spacer16,
+          const SizedBox(height: 16),
           RoughButton(
             onTap: () {
               context.read<ProgressController>().reset();
-              showBanner('Player progress has been reset.');
+              showBanner('Game progress has been reset.');
             },
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,23 +86,16 @@ class SettingsScreen extends StatelessWidget {
                 Icon(Icons.delete),
               ],
             ),
-          )
+          ),
         ]),
         bottomSlot: RoughButton(
-          onTap: () => _onClose(context),
+          onTap: () {
+            if (level == -1) return context.pop();
+            PlaySessionRoute(level: level).go(context);
+          },
           child: const Text('Back'),
         ),
       ),
     );
-  }
-}
-
-extension on SettingsScreen {
-  void _onClose(BuildContext context) {
-    if (level == -1) {
-      context.pop();
-    } else {
-      PlaySessionRoute(level: level).go(context);
-    }
   }
 }

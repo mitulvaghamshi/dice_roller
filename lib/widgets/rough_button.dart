@@ -26,6 +26,7 @@ class RoughButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var palette = context.read<Palette>();
+
     return RawMaterialButton(
       onPressed: enabled ? onTap : null,
       padding: padding,

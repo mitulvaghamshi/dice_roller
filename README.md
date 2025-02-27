@@ -1,10 +1,12 @@
 # Dice Roller
 
-A casual, interactive, single user, dice rolling game
+A casual, interactive, single user, dice rolling game.
 
-## [Original [dice_game.py]](dice_game.py)
+### [Original (dice_game.py)](assets/files/dice_game.py)
 
-```console
+### [Flow control](assets/files/game-flow.pdf)
+
+```
 |------------------------------------------------------------------------------------------------------------------------|
 |--------------------------------------------Welcome to Dice Game, Good Luck!--------------------------------------------|
 |------------------------------------------------------------------------------------------------------------------------|

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:dice_roller/models/game_levels.dart';
-import 'package:dice_roller/models/game_state.dart';
-import 'package:dice_roller/models/game_score.dart';
-import 'package:dice_roller/persistence/progress_controller.dart';
-import 'package:dice_roller/persistence/settings_controller.dart';
 import 'package:dice_roller/router/router.dart';
+import 'package:dice_roller/src/controllers/progress_controller.dart';
+import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/src/models/game_levels.dart';
+import 'package:dice_roller/src/models/game_score.dart';
+import 'package:dice_roller/src/models/game_state.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/confetti_view.dart';
 import 'package:dice_roller/widgets/dice_widget.dart';
@@ -33,37 +33,35 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     duration: const Duration(seconds: 3),
   )..addStatusListener(_onAnimationEnd);
 
-  late final DateTime _startOfPlay = DateTime.now();
+  late final _startOfPlay = DateTime.now();
 
-  bool _showResults = false;
+  bool _animCompleted = false;
   bool _isCelebrating = false;
 
-  void _onAnimationEnd(status) {
-    if (status == AnimationStatus.completed && mounted) _showResults = true;
-  }
-
-  Future<void> _playerWon(diceValues) async {
+  Future<void> _playerWon(Iterable<int> values) async {
     var score = GameScore(
-      diceValues: diceValues,
+      diceValues: values,
       level: widget.level,
       duration: DateTime.now().difference(_startOfPlay),
     );
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(const Duration(milliseconds: 500));
-
     setState(() => _isCelebrating = true);
-
     if (!mounted) return;
-
-    context.read<ProgressController>().setLevelReached(widget.level.number);
+    context.read<ProgressController>().setLevelReached(widget.level.level);
 
     /// Give the player some time to see the celebration animation.
     await Future<void>.delayed(const Duration(seconds: 5));
-
+    setState(() => _isCelebrating = false);
     if (!mounted) return;
-
     context.go(const WinGameRoute().location, extra: score);
+  }
+
+  void _onAnimationEnd(AnimationStatus status) {
+    if (status == AnimationStatus.completed && mounted) {
+      setState(() => _animCompleted = true);
+    }
   }
 
   @override
@@ -76,17 +74,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
   @override
   Widget build(BuildContext context) {
-    var palette = context.read<Palette>();
     var settings = context.read<SettingsController>();
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => GameState(
-            level: widget.level,
-            onWin: _playerWon,
-          ),
-        ),
-      ],
+    var palette = context.read<Palette>();
+
+    return Provider(
+      create: (_) => GameState(level: widget.level, onWin: _playerWon),
       child: IgnorePointer(
         ignoring: _isCelebrating,
         child: Scaffold(
@@ -110,7 +102,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     onTap: () => GameRulesRoute(
                       // Pass the current level number,
                       // will continue on closing rules screen.
-                      level: widget.level.number,
+                      level: widget.level.level,
                     ).go(context),
                     padding: const EdgeInsets.all(8),
                     child: Image.asset(
@@ -123,7 +115,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     onTap: () => SettingsRoute(
                       // Pass the current level number,
                       // will continue on closing rules screen.
-                      level: widget.level.number,
+                      level: widget.level.level,
                     ).go(context),
                     padding: const EdgeInsets.all(8),
                     child: Image.asset(
@@ -165,8 +157,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                 ]),
                 const SizedBox(height: 20),
                 Consumer<GameState>(builder: (_, state, child) {
-                  if (_showResults && !_isCelebrating && state.showResults) {
-                    state.showWiningScreen();
+                  if (_animCompleted && !_isCelebrating && state.showResults) {
+                    state.showWinningScreen();
                   }
                   return LayoutBuilder(builder: (_, constraints) {
                     var width = constraints.biggest.width;
@@ -179,8 +171,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           width: diceWidth.toDouble(),
                           sidesPerDice: state.level.sides,
                           diceValue: state.getDiceValueFor(index + 1),
-                          onEnd: (value) =>
-                              state.setDiceValueFor(index + 1, value),
+                          onEnd: (value) {
+                            state.setDiceValueFor(index + 1, value);
+                          },
                         );
                       }),
                     );
