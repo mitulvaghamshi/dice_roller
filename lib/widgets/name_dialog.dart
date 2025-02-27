@@ -1,4 +1,4 @@
-import 'package:dice_roller/persistence/settings_controller.dart';
+import 'package:dice_roller/src/controllers/settings_controller.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +11,10 @@ class NameDialog extends StatefulWidget {
 
   final Animation<double> animation;
 
-  static Future<void> show(context) async => showGeneralDialog(
-      context: context,
-      pageBuilder: (_, animation, __) => NameDialog(animation: animation));
+  static Future<void> show(BuildContext context) async =>
+      await showGeneralDialog(
+          context: context,
+          pageBuilder: (_, animation, __) => NameDialog(animation: animation));
 
   @override
   State<NameDialog> createState() => _NameDialogState();
@@ -59,7 +60,7 @@ class _NameDialogState extends State<NameDialog> {
             onSubmitted: (_) => context.pop(),
           ),
           const SizedBox(height: 16),
-          RoughButton(onTap: context.pop, child: const Text('Close')),
+          RoughButton(onTap: context.pop, child: const Text('Save')),
         ],
       ),
     );

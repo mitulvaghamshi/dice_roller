@@ -1,10 +1,12 @@
-import 'package:dice_roller/persistence/progress/progress_persistence.dart';
-import 'package:dice_roller/persistence/progress_controller.dart';
-import 'package:dice_roller/persistence/settings/settings_persistence.dart';
-import 'package:dice_roller/persistence/settings_controller.dart';
 import 'package:dice_roller/router/router.dart';
+import 'package:dice_roller/src/controllers/progress_controller.dart';
+import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/src/services/progress_impl/memory_progress_persistence.dart';
+import 'package:dice_roller/src/services/progress_service.dart';
+import 'package:dice_roller/src/services/settings_impl/memory_settings_persistence.dart';
+import 'package:dice_roller/src/services/settings_service.dart';
+import 'package:dice_roller/utils/messenger.dart';
 import 'package:dice_roller/utils/palette.dart';
-import 'package:dice_roller/utils/snack_bar.dart';
 import 'package:dice_roller/widgets/app_lifecycle.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,8 +16,12 @@ import 'package:provider/provider.dart';
 class MainApp extends StatelessWidget {
   const MainApp({super.key, required this.settings, required this.progress});
 
-  final SettingsPersistence settings;
-  final ProgressPersistence progress;
+  MainApp.inMemory({super.key})
+      : settings = MemorySettingsPersistence(),
+        progress = MemoryProgressPersistence();
+
+  final SettingsService settings;
+  final ProgressService progress;
 
   static final _router = GoRouter(routes: $appRoutes);
 
@@ -24,26 +30,26 @@ class MainApp extends StatelessWidget {
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) {
-            return ProgressController(progress)..getFromStore();
-          }),
-          Provider<SettingsController>(create: (_) {
-            return SettingsController(persistence: settings)..loadFromStore();
-          }),
           Provider(create: (_) => Palette()),
+          Provider<SettingsController>(create: (_) {
+            return SettingsController(settings)..load();
+          }),
+          ChangeNotifierProvider(create: (_) {
+            return ProgressController(progress)..load();
+          }),
         ],
         child: Builder(builder: (context) {
           final palette = context.read<Palette>();
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'The Dice Game',
+            title: 'Dice Game',
             routerConfig: _router,
             scaffoldMessengerKey: scaffoldMessengerKey,
             theme: ThemeData.from(
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
-                background: palette.backgroundMain,
+                surface: palette.backgroundMain.dark,
               ),
               textTheme: TextTheme(
                 bodyMedium: TextStyle(

@@ -24,7 +24,7 @@ class DiceWidget extends StatefulWidget {
 }
 
 class _DiceWidgetState extends State<DiceWidget> {
-  void _onComplete(status) {
+  void _onComplete(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
       widget.onEnd(math.Random().nextInt(widget.sidesPerDice) + 1);
     }
