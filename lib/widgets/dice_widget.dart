@@ -24,8 +24,8 @@ class DiceWidget extends StatefulWidget {
 }
 
 class _DiceWidgetState extends State<DiceWidget> {
-  void _onComplete(status) {
-    if (status == AnimationStatus.completed) {
+  void _onComplete(AnimationStatus status) {
+    if (status == .completed) {
       widget.onEnd(math.Random().nextInt(widget.sidesPerDice) + 1);
     }
   }
@@ -43,15 +43,13 @@ class _DiceWidgetState extends State<DiceWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: widget.animation,
-      child: Image.asset(
-        'assets/dices/dice_${widget.diceValue}.webp',
-        fit: BoxFit.contain,
-        width: widget.width,
-        semanticLabel: 'Dice with ${widget.diceValue} numbers.',
-      ),
-    );
-  }
+  Widget build(BuildContext context) => RotationTransition(
+    turns: widget.animation,
+    child: Image.asset(
+      'assets/dices/dice_${widget.diceValue}.webp',
+      fit: .contain,
+      width: widget.width,
+      semanticLabel: 'Dice with ${widget.diceValue} numbers.',
+    ),
+  );
 }

@@ -1,12 +1,13 @@
-import 'package:dice_roller/persistence/progress/progress_persistence.dart';
+import 'package:dice_roller/src/services/progress_service.dart';
 
-/// An in-memory implementation of [ProgressPersistence].
-/// Useful for testing.
-class MemoryProgressPersistence implements ProgressPersistence {
+/// An in-memory implementation of [ProgressService]. Useful for testing.
+class MemoryProgressPersistence implements ProgressService {
+  MemoryProgressPersistence();
+
   int level = 0;
 
   @override
-  Future<int> getHighestLevelReached() async {
+  Future<int> get highestLevelReached async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     return level;
   }

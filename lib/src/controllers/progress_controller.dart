@@ -1,15 +1,14 @@
 import 'dart:async';
 
-import 'package:dice_roller/persistence/progress/progress_persistence.dart';
+import 'package:dice_roller/src/services/progress_service.dart';
 import 'package:flutter/foundation.dart';
 
 /// Encapsulates the player's progress.
 class ProgressController extends ChangeNotifier {
-  /// Creates an instance of [ProgressController] backed by an injected
-  /// persistence [store].
-  ProgressController(ProgressPersistence store) : _store = store;
+  /// Creates a new instance of [ProgressController] backed by [service].
+  ProgressController(ProgressService service) : _service = service;
 
-  final ProgressPersistence _store;
+  final ProgressService _service;
 
   static const maxHighestScoresPerPlayer = 0;
 
@@ -19,13 +18,13 @@ class ProgressController extends ChangeNotifier {
   int get highestLevelReached => _highestLevelReached;
 
   /// Fetches the latest data from the backing persistence store.
-  Future<void> getFromStore() async {
-    var level = await _store.getHighestLevelReached();
+  Future<void> load() async {
+    final level = await _service.highestLevelReached;
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
     } else if (level < _highestLevelReached) {
-      await _store.saveHighestLevelReached(_highestLevelReached);
+      await _service.saveHighestLevelReached(_highestLevelReached);
     }
   }
 
@@ -34,7 +33,7 @@ class ProgressController extends ChangeNotifier {
   void reset() {
     _highestLevelReached = 0;
     notifyListeners();
-    _store.saveHighestLevelReached(_highestLevelReached);
+    unawaited(_service.saveHighestLevelReached(_highestLevelReached));
   }
 
   /// Registers [level] as reached.
@@ -45,7 +44,7 @@ class ProgressController extends ChangeNotifier {
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
-      unawaited(_store.saveHighestLevelReached(level));
+      unawaited(_service.saveHighestLevelReached(level));
     }
   }
 }

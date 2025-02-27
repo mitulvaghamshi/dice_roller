@@ -1,3 +1,5 @@
+import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/utils/audio_manager.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +14,7 @@ class RoughButton extends StatelessWidget {
     this.enabled = true,
     this.drawRectangle = false,
     this.imageName = 'assets/imgs/bar.webp',
-    this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+    this.padding = const .symmetric(vertical: 16, horizontal: 32),
   });
 
   final Widget child;
@@ -25,9 +27,14 @@ class RoughButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var palette = context.read<Palette>();
+    final palette = context.read<Palette>();
     return RawMaterialButton(
-      onPressed: enabled ? onTap : null,
+      onPressed: () async {
+        if (enabled) onTap();
+        if (!context.read<SettingsController>().muted.value) {
+          await AudioManager.playAsset('clips/start.mp3');
+        }
+      },
       padding: padding,
       elevation: 5,
       disabledElevation: 5,
@@ -36,9 +43,9 @@ class RoughButton extends StatelessWidget {
           ? (fillColor ?? palette.backgroundButton)
           : palette.backgroundLevelSelection,
       constraints: const BoxConstraints(minWidth: 50, minHeight: 50),
-      shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: BeveledRectangleBorder(borderRadius: .circular(16)),
       child: Stack(
-        alignment: AlignmentDirectional.center,
+        alignment: .center,
         children: [if (drawRectangle) Image.asset(imageName), child],
       ),
     );

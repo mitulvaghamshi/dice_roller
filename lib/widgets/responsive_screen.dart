@@ -27,14 +27,13 @@ class ResponsiveScreen extends StatelessWidget {
   final double mainAreaProminence;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (_, constraints) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (_, constraints) {
       // This widget wants to fill the whole screen.
-      var size = constraints.biggest;
-      var padding = EdgeInsets.all(size.shortestSide / 30);
-
+      final size = constraints.biggest;
+      final padding = EdgeInsets.all(size.shortestSide / 30);
+      // Portrait / Mobile mode.
       if (size.height >= size.width) {
-        // Portrait / Mobile mode.
         return _PortraitLayout(
           padding: padding,
           topSlot: topSlot,
@@ -42,18 +41,17 @@ class ResponsiveScreen extends StatelessWidget {
           mainSlot: mainSlot,
           bottomSlot: bottomSlot,
         );
-      } else {
-        // Landscape / Tablet mode.
-        return _LandscapeLayout(
-          isLarge: size.width > 900,
-          padding: padding,
-          mainSlot: mainSlot,
-          topSlot: topSlot,
-          bottomSlot: bottomSlot,
-        );
       }
-    });
-  }
+      // Landscape / Tablet mode.
+      return _LandscapeLayout(
+        isLarge: size.width > 900,
+        padding: padding,
+        mainSlot: mainSlot,
+        topSlot: topSlot,
+        bottomSlot: bottomSlot,
+      );
+    },
+  );
 }
 
 @immutable
@@ -73,8 +71,9 @@ class _PortraitLayout extends StatelessWidget {
   final Widget bottomSlot;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
       SafeArea(
         bottom: false,
         child: Padding(padding: padding, child: topSlot),
@@ -93,8 +92,8 @@ class _PortraitLayout extends StatelessWidget {
         maintainBottomViewPadding: true,
         child: Padding(padding: padding, child: bottomSlot),
       ),
-    ]);
-  }
+    ],
+  );
 }
 
 @immutable
@@ -114,8 +113,9 @@ class _LandscapeLayout extends StatelessWidget {
   final Widget bottomSlot;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: .stretch,
+    children: [
       Expanded(
         flex: isLarge ? 7 : 5,
         child: SafeArea(
@@ -127,26 +127,28 @@ class _LandscapeLayout extends StatelessWidget {
       ),
       Expanded(
         flex: 3,
-        child: Column(children: [
-          SafeArea(
-            bottom: false,
-            left: false,
-            maintainBottomViewPadding: true,
-            child: Padding(padding: padding, child: topSlot),
-          ),
-          Expanded(
-            child: SafeArea(
-              top: false,
+        child: Column(
+          children: [
+            SafeArea(
               left: false,
+              bottom: false,
               maintainBottomViewPadding: true,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(padding: padding, child: bottomSlot),
+              child: Padding(padding: padding, child: topSlot),
+            ),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                left: false,
+                maintainBottomViewPadding: true,
+                child: Align(
+                  alignment: .bottomCenter,
+                  child: Padding(padding: padding, child: bottomSlot),
+                ),
               ),
             ),
-          )
-        ]),
+          ],
+        ),
       ),
-    ]);
-  }
+    ],
+  );
 }

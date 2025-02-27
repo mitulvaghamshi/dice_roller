@@ -8,16 +8,16 @@ from random import randint
 # # [welcome] Module to display simple message and to screen with formatted output.
 #   Make sure your console is at least 120 characters [approximate 8-9 inches] wide for proper output.
 def welcome():
-    print('|' + '-' * 120 + '|')
+    print('|' + '-' * 100 + '|')
     print('|' + '{:-^120s}'.format('Welcome to Dice Game, Good Luck!') + '|')
-    print('|' + '-' * 120 + '|')
+    print('|' + '-' * 100 + '|')
     print("The game is based on 5 different patterns..., match any/all to collect respective points.\n")
     print("Pattern 1: (10 pts):\n=> Get all same numbers.\n=> Play with at least X number of sides.\n")
     print("Pattern 2: (15 pts):\n=> Make any scrore that is a prime number (3, 5, 7, 11, 13, so on).\n=> And scrore at least 20 points or more.\n")
     print("Pattern 3: (5 pts):\n=> Get at least half of dices each make score more then average.\n=> Play with at least X number of dices.\n")
     print("Pattern 4: (8 pts):\n=> Get all unique numbers.\n=> Play with at least X number of dices.\n=> Weight of sides over dices.\n")
     print("Pattern 5: (1 pts):\n=> If didn't match any of above pattern.\n")
-    print('|' + '-' * 120 + '|')
+    print('|' + '-' * 100 + '|')
 # # [End welcome]
 
 

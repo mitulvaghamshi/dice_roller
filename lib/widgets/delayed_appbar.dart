@@ -29,16 +29,21 @@ class DelayedAppear extends StatefulWidget {
 
 class _DelayedAppearState extends State<DelayedAppear>
     with TickerProviderStateMixin {
-  static const fadeDuration = Duration(milliseconds: 300);
-  late final AnimationController _delayController;
-  late final AnimationController _fadeController;
+  late final _delayController = AnimationController(
+    duration: widget.delay,
+    vsync: this,
+  );
+
+  late final _fadeController = AnimationController(
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  );
 
   bool _delayFinished = false;
 
   @override
   void initState() {
     super.initState();
-    _delayController = AnimationController(duration: widget.delay, vsync: this);
     _delayController.animateTo(1).then((_) {
       if (!mounted) return;
       setState(() {
@@ -47,7 +52,6 @@ class _DelayedAppearState extends State<DelayedAppear>
         widget.onEnd?.call();
       });
     });
-    _fadeController = AnimationController(duration: fadeDuration, vsync: this);
   }
 
   @override
@@ -59,7 +63,7 @@ class _DelayedAppearState extends State<DelayedAppear>
 
   @override
   Widget build(BuildContext context) {
-    if (!_delayFinished && widget.delayStateCreation) {
+    if (widget.delayStateCreation && !_delayFinished) {
       return const SizedBox.shrink();
     }
     return FadeTransition(opacity: _fadeController, child: widget.child);

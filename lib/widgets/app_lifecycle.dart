@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 @immutable
 class AppLifecycleObserver extends StatefulWidget {
   const AppLifecycleObserver({required this.child, super.key});
+
   final Widget child;
 
   @override
@@ -12,8 +13,9 @@ class AppLifecycleObserver extends StatefulWidget {
 
 class _AppLifecycleObserverState extends State<AppLifecycleObserver>
     with WidgetsBindingObserver {
-  final ValueNotifier<AppLifecycleState> lifecycleListenable =
-      ValueNotifier(AppLifecycleState.inactive);
+  final lifecycleListenable = ValueNotifier<AppLifecycleState>(
+    AppLifecycleState.inactive,
+  );
 
   @override
   void initState() {

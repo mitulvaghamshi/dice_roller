@@ -8,17 +8,16 @@ CustomTransitionPage<T> buildTransition<T>({
   Object? arguments,
   String? restorationId,
   LocalKey? key,
-}) =>
-    CustomTransitionPage<T>(
-      key: key,
-      name: name,
-      child: child,
-      arguments: arguments,
-      restorationId: restorationId,
-      transitionDuration: const Duration(milliseconds: 700),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-          _MyReveal(animation: animation, color: color, child: child),
-    );
+}) => CustomTransitionPage<T>(
+  key: key,
+  name: name,
+  child: child,
+  arguments: arguments,
+  restorationId: restorationId,
+  transitionDuration: const Duration(milliseconds: 700),
+  transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+      _MyReveal(animation: animation, color: color, child: child),
+);
 
 @immutable
 class _MyReveal extends StatefulWidget {
@@ -48,11 +47,11 @@ class _MyRevealState extends State<_MyReveal> {
 
   @override
   void didUpdateWidget(covariant _MyReveal oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget.animation != widget.animation) {
       oldWidget.animation.removeStatusListener(_statusListener);
       widget.animation.addStatusListener(_statusListener);
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -62,14 +61,17 @@ class _MyRevealState extends State<_MyReveal> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(fit: StackFit.expand, children: [
+  Widget build(BuildContext context) => Stack(
+    fit: .expand,
+    children: [
       SlideTransition(
-        position: _tween.animate(CurvedAnimation(
-          parent: widget.animation,
-          curve: Curves.easeOutCubic,
-          reverseCurve: Curves.easeOutCubic,
-        )),
+        position: _tween.animate(
+          CurvedAnimation(
+            parent: widget.animation,
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeOutCubic,
+          ),
+        ),
         child: Container(color: widget.color),
       ),
       AnimatedOpacity(
@@ -77,11 +79,11 @@ class _MyRevealState extends State<_MyReveal> {
         duration: const Duration(milliseconds: 300),
         child: widget.child,
       ),
-    ]);
-  }
+    ],
+  );
 
   void _statusListener(AnimationStatus status) {
-    if (status == AnimationStatus.completed) {
+    if (status == .completed) {
       setState(() => _finished = true);
     }
   }
