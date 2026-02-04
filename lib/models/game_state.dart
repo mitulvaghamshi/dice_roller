@@ -1,33 +1,34 @@
-import 'package:dice_roller/src/models/game_levels.dart';
+import 'package:dice_roller/models/game_levels.dart';
 import 'package:flutter/foundation.dart';
 
-@immutable
 class GameState {
-  GameState({required this.level, required this.onWin});
+  GameState({required this.level, required this.onWin}) {
+    reset();
+  }
 
   final GameLevel level;
   final ValueChanged<Iterable<int>> onWin;
 
-  final _dice = ValueNotifier<Map<int, int>>({});
+  final _dice = <int, int>{};
 }
 
 extension Utils on GameState {
-  bool get showResults => _dice.value.length == level.dices;
+  bool get showResults => _dice.length == level.dices;
 
-  void showWinScreen() => onWin(_dice.value.values);
+  void showWinScreen() => onWin(_dice.values);
 
   void reset() {
     for (var i = 1; i <= level.dices; i++) {
-      _dice.value[i] = 0;
+      _dice[i] = 0;
     }
   }
 
   int getDiceValueFor(int number) {
     RangeError.checkValueInInterval(number, 1, 6, 'DiceNumber');
-    return _dice.value[number] ?? 1;
+    return ArgumentError.checkNotNull(_dice[number], '_dice[$number]');
   }
 
   void setDiceValueFor(int number, int value) {
-    _dice.value[number] = value;
+    _dice[number] = value;
   }
 }

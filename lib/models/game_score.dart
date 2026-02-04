@@ -1,8 +1,43 @@
-import 'package:dice_roller/src/models/game_levels.dart';
+import 'package:dice_roller/models/game_levels.dart';
+import 'package:dice_roller/models/pattern.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
 class GameScore {
+  factory GameScore({
+    required Iterable<int> diceValues,
+    required GameLevel level,
+    required Duration duration,
+  }) {
+    final sum = diceValues.fold(0, (acc, val) => acc + val);
+
+    final patterns = [
+      level.pattern1(length: diceValues.length),
+      level.pattern2(sum: sum),
+      level.pattern3(sum: sum, values: diceValues),
+      level.pattern4(length: diceValues.length),
+    ];
+
+    final totalP1ToP4 = patterns.fold(0, (acc, val) => acc + val.points);
+
+    final patterns2 = [...patterns, level.pattern5(bonus: totalP1ToP4)];
+
+    final bonusTotal = patterns2.fold(0, (acc, val) => acc + val.points);
+
+    final finalScore =
+        (sum / level.dices * level.sides) * bonusTotal + (821600 % 500);
+
+    return ._(
+      pointsTotal: sum,
+      bonusTotal: bonusTotal,
+      finalScore: finalScore.round(),
+      duration: duration,
+      level: level,
+      diceValues: diceValues,
+      results: patterns2,
+    );
+  }
+
   const GameScore._({
     required this.pointsTotal,
     required this.bonusTotal,
@@ -13,46 +48,13 @@ class GameScore {
     required this.results,
   });
 
-  factory GameScore({
-    required Iterable<int> diceValues,
-    required GameLevel level,
-    required Duration duration,
-  }) {
-    final pointsTotal = diceValues.fold(0, (acc, val) => acc + val);
-
-    final bonuses = [
-      level.pattern1(unique: diceValues.length),
-      level.pattern2(sum: pointsTotal),
-      level.pattern3(sum: pointsTotal, values: diceValues),
-      level.pattern4(unique: diceValues.length),
-    ];
-
-    final totalP1ToP4 = bonuses.fold(0, (acc, val) => acc + val.points);
-    bonuses.add(level.pattern5(bonus: totalP1ToP4));
-
-    final bonusTotal = bonuses.fold(0, (acc, val) => acc + val.points);
-
-    final finalScore =
-        (pointsTotal / level.dices * level.sides) * bonusTotal + (821600 % 500);
-
-    return GameScore._(
-      pointsTotal: pointsTotal,
-      bonusTotal: bonusTotal,
-      finalScore: finalScore.round(),
-      duration: duration,
-      level: level,
-      diceValues: diceValues,
-      results: bonuses,
-    );
-  }
-
   final int pointsTotal;
   final int bonusTotal;
   final int finalScore;
   final Duration duration;
   final GameLevel level;
   final Iterable<int> diceValues;
-  final Iterable<Bonus> results;
+  final Iterable<Pattern> results;
 
   @override
   String toString() => 'Score($finalScore, $formattedTime, ${level.level})';
