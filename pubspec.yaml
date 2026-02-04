@@ -4,7 +4,7 @@ publish_to: none # Prevent accidental publishing to pub.dev.
 version: 0.0.1+1
 
 environment:
-  sdk: ^3.10.4
+  sdk: ^3.10.8
 
 dependencies:
   audioplayers: ^6.5.1
@@ -36,25 +36,25 @@ flutter:
     - assets/dices/dice_4.webp
     - assets/dices/dice_5.webp
     - assets/dices/dice_6.webp
-    - assets/imgs/2x/back.webp
-    - assets/imgs/2x/bar.webp
-    - assets/imgs/2x/box.webp
-    - assets/imgs/2x/cross.webp
-    - assets/imgs/2x/settings.webp
-    - assets/imgs/3.5x/back.webp
-    - assets/imgs/3.5x/bar.webp
-    - assets/imgs/3.5x/box.webp
-    - assets/imgs/3.5x/settings.webp
-    - assets/imgs/3x/back.webp
-    - assets/imgs/3x/bar.webp
-    - assets/imgs/3x/box.webp
-    - assets/imgs/3x/cross.webp
-    - assets/imgs/3x/settings.webp
     - assets/imgs/back.webp
     - assets/imgs/bar.webp
     - assets/imgs/box.webp
     - assets/imgs/cross.webp
     - assets/imgs/settings.webp
+    - assets/imgs/2x/back.webp
+    - assets/imgs/2x/bar.webp
+    - assets/imgs/2x/box.webp
+    - assets/imgs/2x/cross.webp
+    - assets/imgs/2x/settings.webp
+    - assets/imgs/3x/back.webp
+    - assets/imgs/3x/bar.webp
+    - assets/imgs/3x/box.webp
+    - assets/imgs/3x/cross.webp
+    - assets/imgs/3x/settings.webp
+    - assets/imgs/3.5x/back.webp
+    - assets/imgs/3.5x/bar.webp
+    - assets/imgs/3.5x/box.webp
+    - assets/imgs/3.5x/settings.webp
 
   fonts:
     - family: Permanent Marker
