@@ -16,7 +16,7 @@ mixin AudioManager {
     await _player.play(AssetSource(fileName));
   }
 
-  static Future<void> pause() async => await _player.pause();
-  static Future<void> stop() async => await _player.stop();
-  static Future<void> resume() async => await _player.resume();
+  static Future<void> pause() async => _player.pause();
+  static Future<void> stop() async => _player.stop();
+  static Future<void> resume() async => _player.resume();
 }

@@ -1,10 +1,10 @@
+import 'package:dice_roller/controllers/progress_controller.dart';
+import 'package:dice_roller/controllers/settings_controller.dart';
 import 'package:dice_roller/router/router.dart';
-import 'package:dice_roller/src/controllers/progress_controller.dart';
-import 'package:dice_roller/src/controllers/settings_controller.dart';
-import 'package:dice_roller/src/services/progress_impl/memory_progress_persistence.dart';
-import 'package:dice_roller/src/services/progress_service.dart';
-import 'package:dice_roller/src/services/settings_impl/memory_settings_persistence.dart';
-import 'package:dice_roller/src/services/settings_service.dart';
+import 'package:dice_roller/services/progress_impl/memory_progress_persistence.dart';
+import 'package:dice_roller/services/progress_service.dart';
+import 'package:dice_roller/services/settings_impl/memory_settings_persistence.dart';
+import 'package:dice_roller/services/settings_service.dart';
 import 'package:dice_roller/utils/messenger.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/app_lifecycle.dart';
@@ -30,10 +30,8 @@ class MainApp extends StatelessWidget {
     child: MultiProvider(
       providers: [
         Provider(create: (_) => Palette()),
-        Provider(create: (_) => SettingsController(settings)..load()),
-        ChangeNotifierProvider(
-          create: (_) => ProgressController(progress)..load(),
-        ),
+        Provider(create: (_) => SettingsController(settings)),
+        ChangeNotifierProvider(create: (_) => ProgressController(progress)),
       ],
       child: Builder(
         builder: (context) {

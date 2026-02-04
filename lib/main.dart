@@ -5,5 +5,6 @@ import 'package:flutter/services.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
+
   runApp(MainApp.inMemory());
 }

@@ -1,4 +1,4 @@
-import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/controllers/settings_controller.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +27,7 @@ class _NameDialogState extends State<NameDialog> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller.text = context.read<SettingsController>().playerName.value;
+    _controller.text = context.read<SettingsController>().player.value;
   }
 
   @override
@@ -55,7 +55,7 @@ class _NameDialogState extends State<NameDialog> {
           textInputAction: .done,
           textAlign: .center,
           onChanged: (value) =>
-              context.read<SettingsController>().setPlayerName(value),
+              context.read<SettingsController>().setPlayer(value),
           // Player tapped 'Submit'/'Done' on their keyboard.
           onSubmitted: (_) => context.pop(),
         ),

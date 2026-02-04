@@ -1,17 +1,10 @@
 import 'package:dice_roller/app.dart';
-import 'package:dice_roller/src/services/progress_impl/memory_progress_persistence.dart';
-import 'package:dice_roller/src/services/settings_impl/memory_settings_persistence.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Smoke test', (tester) async {
     // Build our game and trigger a frame.
-    await tester.pumpWidget(
-      MainApp(
-        settings: MemorySettingsPersistence(),
-        progress: MemoryProgressPersistence(),
-      ),
-    );
+    await tester.pumpWidget(MainApp.inMemory());
 
     // Verify that the 'Play' button is shown.
     expect(find.text('Play'), findsOneWidget);

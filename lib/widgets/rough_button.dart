@@ -1,4 +1,4 @@
-import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/controllers/settings_controller.dart';
 import 'package:dice_roller/utils/audio_manager.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +28,11 @@ class RoughButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
+    final muted = context.read<SettingsController>().muted.value;
     return RawMaterialButton(
       onPressed: () async {
         if (enabled) onTap();
-        if (!context.read<SettingsController>().muted.value) {
-          await AudioManager.playAsset('clips/start.mp3');
-        }
+        if (!muted) await AudioManager.playAsset('clips/start.mp3');
       },
       padding: padding,
       elevation: 5,
