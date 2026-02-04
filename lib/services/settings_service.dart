@@ -10,8 +10,8 @@ abstract class SettingsService {
   Future<bool?> get isMuted;
   Future<String> get player;
 
-  Future<void> saveMusicOn(bool value);
-  Future<void> saveSoundsOn(bool value);
-  Future<void> saveMuted(bool value);
-  Future<void> savePlayerName(String value);
+  set isMusicOn(bool value);
+  set isSoundsOn(bool value);
+  set isMuted(bool value);
+  set player(String value);
 }

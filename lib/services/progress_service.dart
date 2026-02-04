@@ -5,6 +5,6 @@
 abstract class ProgressService {
   const ProgressService();
 
-  Future<int> get highestLevelReached;
-  Future<void> saveHighestLevelReached(int level);
+  Future<int> get highestLevel;
+  set highestLevel(int value);
 }
