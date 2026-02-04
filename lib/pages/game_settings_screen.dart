@@ -1,5 +1,5 @@
-import 'package:dice_roller/src/controllers/progress_controller.dart';
-import 'package:dice_roller/src/controllers/settings_controller.dart';
+import 'package:dice_roller/controllers/progress_controller.dart';
+import 'package:dice_roller/controllers/settings_controller.dart';
 import 'package:dice_roller/utils/messenger.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/name_dialog.dart';
@@ -10,8 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 @immutable
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class GameSettingsScreen extends StatelessWidget {
+  const GameSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -36,11 +36,11 @@ class _MainSlot extends StatelessWidget {
         const Text(
           'Settings',
           textAlign: .center,
-          style: TextStyle(fontSize: 55, height: 1),
+          style: TextStyle(fontSize: 50),
         ),
         const SizedBox(height: 60),
         ValueListenableBuilder<String>(
-          valueListenable: settings.playerName,
+          valueListenable: settings.player,
           builder: (_, name, child) => RoughButton(
             onTap: () => NameDialog.show(context),
             child: Row(
@@ -54,9 +54,9 @@ class _MainSlot extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ValueListenableBuilder<bool>(
-          valueListenable: settings.soundsOn,
+          valueListenable: settings.sound,
           builder: (_, soundsOn, child) => RoughButton(
-            onTap: settings.toggleSoundsOn,
+            onTap: settings.toggleSound,
             child: Row(
               mainAxisAlignment: .spaceBetween,
               children: [
@@ -68,9 +68,9 @@ class _MainSlot extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ValueListenableBuilder<bool>(
-          valueListenable: settings.musicOn,
+          valueListenable: settings.music,
           builder: (_, musicOn, child) => RoughButton(
-            onTap: settings.toggleMusicOn,
+            onTap: settings.toggleMusic,
             child: Row(
               mainAxisAlignment: .spaceBetween,
               children: [

@@ -6,30 +6,39 @@ part of 'router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$menuRoute];
+List<RouteBase> get $appRoutes => [$gameHomeRoute];
 
-RouteBase get $menuRoute => GoRouteData.$route(
+RouteBase get $gameHomeRoute => GoRouteData.$route(
   path: '/',
-  factory: $MenuRoute._fromState,
+  factory: $GameHomeRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'settings', factory: $SettingsRoute._fromState),
-    GoRouteData.$route(path: 'gamerules', factory: $GameRulesRoute._fromState),
     GoRouteData.$route(
-      path: 'play',
-      factory: $PlayRoute._fromState,
+      path: 'game-levels-screen',
+      factory: $GameLevelsRoute._fromState,
       routes: [
         GoRouteData.$route(
-          path: 'session/:level',
-          factory: $PlaySessionRoute._fromState,
+          path: 'game-session-screen/:level',
+          factory: $GameSessionRoute._fromState,
         ),
-        GoRouteData.$route(path: 'won', factory: $WinGameRoute._fromState),
+        GoRouteData.$route(
+          path: 'game-result-screen',
+          factory: $GameResultRoute._fromState,
+        ),
       ],
+    ),
+    GoRouteData.$route(
+      path: 'game-settings-screen',
+      factory: $GameSettingsRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'game-rules-screen',
+      factory: $GameRulesRoute._fromState,
     ),
   ],
 );
 
-mixin $MenuRoute on GoRouteData {
-  static MenuRoute _fromState(GoRouterState state) => const MenuRoute();
+mixin $GameHomeRoute on GoRouteData {
+  static GameHomeRoute _fromState(GoRouterState state) => const GameHomeRoute();
 
   @override
   String get location => GoRouteData.$location('/');
@@ -48,11 +57,80 @@ mixin $MenuRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $SettingsRoute on GoRouteData {
-  static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
+mixin $GameLevelsRoute on GoRouteData {
+  static GameLevelsRoute _fromState(GoRouterState state) =>
+      const GameLevelsRoute();
 
   @override
-  String get location => GoRouteData.$location('/settings');
+  String get location => GoRouteData.$location('/game-levels-screen');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $GameSessionRoute on GoRouteData {
+  static GameSessionRoute _fromState(GoRouterState state) =>
+      GameSessionRoute(level: int.parse(state.pathParameters['level']!));
+
+  GameSessionRoute get _self => this as GameSessionRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/game-levels-screen/game-session-screen/${Uri.encodeComponent(_self.level.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $GameResultRoute on GoRouteData {
+  static GameResultRoute _fromState(GoRouterState state) =>
+      const GameResultRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/game-levels-screen/game-result-screen');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $GameSettingsRoute on GoRouteData {
+  static GameSettingsRoute _fromState(GoRouterState state) =>
+      const GameSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/game-settings-screen');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -73,72 +151,7 @@ mixin $GameRulesRoute on GoRouteData {
       const GameRulesRoute();
 
   @override
-  String get location => GoRouteData.$location('/gamerules');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $PlayRoute on GoRouteData {
-  static PlayRoute _fromState(GoRouterState state) => const PlayRoute();
-
-  @override
-  String get location => GoRouteData.$location('/play');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $PlaySessionRoute on GoRouteData {
-  static PlaySessionRoute _fromState(GoRouterState state) =>
-      PlaySessionRoute(level: int.parse(state.pathParameters['level']!));
-
-  PlaySessionRoute get _self => this as PlaySessionRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/play/session/${Uri.encodeComponent(_self.level.toString())}',
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $WinGameRoute on GoRouteData {
-  static WinGameRoute _fromState(GoRouterState state) => const WinGameRoute();
-
-  @override
-  String get location => GoRouteData.$location('/play/won');
+  String get location => GoRouteData.$location('/game-rules-screen');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -1,11 +1,11 @@
+import 'package:dice_roller/models/game_levels.dart';
+import 'package:dice_roller/models/game_score.dart';
+import 'package:dice_roller/pages/game_home_screen.dart';
+import 'package:dice_roller/pages/game_levels_screen.dart';
+import 'package:dice_roller/pages/game_result_screen.dart';
 import 'package:dice_roller/pages/game_rules_screen.dart';
-import 'package:dice_roller/pages/level_selection_screen.dart';
-import 'package:dice_roller/pages/menu_screen.dart';
-import 'package:dice_roller/pages/play_session_screen.dart';
-import 'package:dice_roller/pages/settings_screen.dart';
-import 'package:dice_roller/pages/win_game_screen.dart';
-import 'package:dice_roller/src/models/game_levels.dart';
-import 'package:dice_roller/src/models/game_score.dart';
+import 'package:dice_roller/pages/game_session_screen.dart';
+import 'package:dice_roller/pages/game_settings_screen.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/my_transition.dart';
 import 'package:flutter/material.dart';
@@ -14,31 +14,37 @@ import 'package:provider/provider.dart';
 
 part 'router.g.dart';
 
-@TypedGoRoute<MenuRoute>(
-  path: '/',
+@TypedGoRoute<GameHomeRoute>(
+  path: GameHomeRoute.path,
   routes: [
-    TypedGoRoute<SettingsRoute>(path: 'settings'),
-    TypedGoRoute<GameRulesRoute>(path: 'gamerules'),
-    TypedGoRoute<PlayRoute>(
-      path: 'play',
+    TypedGoRoute<GameLevelsRoute>(
+      path: GameLevelsRoute.path,
       routes: [
-        TypedGoRoute<PlaySessionRoute>(path: 'session/:level'),
-        TypedGoRoute<WinGameRoute>(path: 'won'),
+        TypedGoRoute<GameSessionRoute>(path: GameSessionRoute.path),
+        TypedGoRoute<GameResultRoute>(path: GameResultRoute.path),
       ],
     ),
+    TypedGoRoute<GameSettingsRoute>(path: GameSettingsRoute.path),
+    TypedGoRoute<GameRulesRoute>(path: GameRulesRoute.path),
   ],
 )
 @immutable
-class MenuRoute extends GoRouteData with $MenuRoute {
-  const MenuRoute();
+class GameHomeRoute extends GoRouteData with $GameHomeRoute {
+  const GameHomeRoute();
+
+  static const path = '/';
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const MenuScreen();
+  Widget build(BuildContext context, GoRouterState state) {
+    return const GameHomeScreen();
+  }
 }
 
 @immutable
 class GameRulesRoute extends GoRouteData with $GameRulesRoute {
   const GameRulesRoute();
+
+  static const path = 'game-rules-screen';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
@@ -50,56 +56,64 @@ class GameRulesRoute extends GoRouteData with $GameRulesRoute {
 }
 
 @immutable
-class SettingsRoute extends GoRouteData with $SettingsRoute {
-  const SettingsRoute();
+class GameSettingsRoute extends GoRouteData with $GameSettingsRoute {
+  const GameSettingsRoute();
+
+  static const path = 'game-settings-screen';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().backgroundSettings,
-      child: const SettingsScreen(),
+      child: const GameSettingsScreen(),
     );
   }
 }
 
 @immutable
-class PlayRoute extends GoRouteData with $PlayRoute {
-  const PlayRoute();
+class GameLevelsRoute extends GoRouteData with $GameLevelsRoute {
+  const GameLevelsRoute();
+
+  static const path = 'game-levels-screen';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().backgroundLevelSelection,
-      child: const LevelSelectionScreen(),
+      child: const GameLevelsScreen(),
     );
   }
 }
 
 @immutable
-class PlaySessionRoute extends GoRouteData with $PlaySessionRoute {
-  const PlaySessionRoute({required this.level});
+class GameSessionRoute extends GoRouteData with $GameSessionRoute {
+  const GameSessionRoute({required this.level});
 
   final int level;
+
+  static const path = 'game-session-screen/:level';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     final gameLevel = gameLevels.singleWhere((e) => e.level == level);
     return buildTransition(
       color: context.read<Palette>().backgroundPlaySession,
-      child: PlaySessionScreen(level: gameLevel),
+      child: GameSessionScreen(level: gameLevel),
     );
   }
 }
 
 @immutable
-class WinGameRoute extends GoRouteData with $WinGameRoute {
-  const WinGameRoute();
+class GameResultRoute extends GoRouteData with $GameResultRoute {
+  const GameResultRoute();
+
+  static const path = 'game-result-screen';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return buildTransition(
       color: context.read<Palette>().background4,
-      child: WinGameScreen(score: state.extra! as GameScore),
+      child: GameResultScreen(score: state.extra! as GameScore),
     );
   }
 }

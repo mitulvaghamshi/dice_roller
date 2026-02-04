@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:dice_roller/controllers/progress_controller.dart';
+import 'package:dice_roller/controllers/settings_controller.dart';
+import 'package:dice_roller/models/game_levels.dart';
+import 'package:dice_roller/models/game_score.dart';
+import 'package:dice_roller/models/game_state.dart';
 import 'package:dice_roller/router/router.dart';
-import 'package:dice_roller/src/controllers/progress_controller.dart';
-import 'package:dice_roller/src/controllers/settings_controller.dart';
-import 'package:dice_roller/src/models/game_levels.dart';
-import 'package:dice_roller/src/models/game_score.dart';
-import 'package:dice_roller/src/models/game_state.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/confetti_view.dart';
 import 'package:dice_roller/widgets/dice_widget.dart';
@@ -16,16 +16,16 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 @immutable
-class PlaySessionScreen extends StatefulWidget {
-  const PlaySessionScreen({super.key, required this.level});
+class GameSessionScreen extends StatefulWidget {
+  const GameSessionScreen({super.key, required this.level});
 
   final GameLevel level;
 
   @override
-  State<PlaySessionScreen> createState() => _PlaySessionScreenState();
+  State<GameSessionScreen> createState() => _GameSessionScreenState();
 }
 
-class _PlaySessionScreenState extends State<PlaySessionScreen>
+class _GameSessionScreenState extends State<GameSessionScreen>
     with SingleTickerProviderStateMixin {
   late final _anim = AnimationController(
     vsync: this,
@@ -43,7 +43,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     await Future<void>.delayed(const Duration(seconds: 1));
     setState(() => _isCelebrating = true);
     if (!mounted) return;
-    context.read<ProgressController>().setLevelReached(widget.level.level);
+    context.read<ProgressController>().setLevel(widget.level.level);
 
     /// Give the player some time to see the celebration animation.
     await Future<void>.delayed(const Duration(seconds: 5));
@@ -51,7 +51,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
     if (!mounted) return;
     context.go(
-      const WinGameRoute().location,
+      const GameResultRoute().location,
       extra: GameScore(
         diceValues: values,
         level: widget.level,
@@ -114,7 +114,7 @@ class _TopSlot extends StatelessWidget {
     mainAxisSize: .min,
     children: [
       RoughButton(
-        onTap: () => const PlayRoute().go(context),
+        onTap: () => const GameLevelsRoute().go(context),
         padding: const .all(8),
         child: Image.asset(
           'assets/imgs/cross.webp',
@@ -132,7 +132,7 @@ class _TopSlot extends StatelessWidget {
         ),
       ),
       RoughButton(
-        onTap: () => const SettingsRoute().push(context),
+        onTap: () => const GameSettingsRoute().push(context),
         padding: const .all(8),
         child: Image.asset(
           'assets/imgs/settings.webp',
@@ -163,7 +163,7 @@ class _MainSlot extends StatelessWidget {
         spacing: 10,
         children: [
           Text(
-            'Player: ${context.read<SettingsController>().playerName.value}',
+            'Player: ${context.read<SettingsController>().player.value}',
             style: const TextStyle(fontSize: 22),
           ),
           Text(

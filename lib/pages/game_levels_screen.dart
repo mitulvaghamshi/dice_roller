@@ -1,6 +1,6 @@
+import 'package:dice_roller/controllers/progress_controller.dart';
+import 'package:dice_roller/models/game_levels.dart';
 import 'package:dice_roller/router/router.dart';
-import 'package:dice_roller/src/controllers/progress_controller.dart';
-import 'package:dice_roller/src/models/game_levels.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/responsive_screen.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
@@ -9,18 +9,19 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 @immutable
-class LevelSelectionScreen extends StatelessWidget {
-  const LevelSelectionScreen({super.key});
+class GameLevelsScreen extends StatelessWidget {
+  const GameLevelsScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: context.read<Palette>().backgroundLevelSelection,
     body: ResponsiveScreen(
-      topSlot: const Text('Select level', style: TextStyle(fontSize: 30)),
+      topSlot: const Text('Select level', style: TextStyle(fontSize: 50)),
       mainSlot: ListView.separated(
+        padding: .symmetric(vertical: 16),
         itemCount: gameLevels.length,
-        separatorBuilder: (_, index) => const SizedBox(height: 5),
-        itemBuilder: (context, index) => _LevelItem(index: index),
+        separatorBuilder: (_, index) => const SizedBox(height: 16),
+        itemBuilder: (context, index) => _LevelListItem(index: index),
       ),
       bottomSlot: RoughButton(onTap: context.pop, child: const Text('Back')),
     ),
@@ -28,8 +29,8 @@ class LevelSelectionScreen extends StatelessWidget {
 }
 
 @immutable
-class _LevelItem extends StatelessWidget {
-  const _LevelItem({required this.index});
+class _LevelListItem extends StatelessWidget {
+  const _LevelListItem({required this.index});
 
   final int index;
 
@@ -38,15 +39,18 @@ class _LevelItem extends StatelessWidget {
     final level = gameLevels.elementAt(index);
     final progress = context.watch<ProgressController>();
     return RoughButton(
-      onTap: () => PlaySessionRoute(level: level.level).go(context),
-      enabled: progress.highestLevelReached >= level.level - 1,
+      onTap: () => GameSessionRoute(level: level.level).go(context),
+      enabled: progress.highestLevel >= level.level - 1,
       fillColor: context.read<Palette>().backgroundSettings,
       child: Row(
         mainAxisAlignment: .spaceBetween,
         children: [
-          Text('${level.level}', style: const TextStyle(fontSize: 22)),
-          Text('Level #${level.level}'),
-          Text('Dices: ${level.dices} | Sides: ${level.sides}'),
+          Text('${index + 1}', style: const TextStyle(fontSize: 18)),
+          Text('Level #${level.level}', style: const TextStyle(fontSize: 20)),
+          Text(
+            'Dices: ${level.dices} | Sides: ${level.sides}',
+            style: const TextStyle(fontSize: 18),
+          ),
         ],
       ),
     );

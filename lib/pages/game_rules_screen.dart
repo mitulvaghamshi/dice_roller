@@ -14,11 +14,11 @@ class GameRulesScreen extends StatefulWidget {
 }
 
 class _GameRulesScreenState extends State<GameRulesScreen> {
-  final _ctrl = PageController();
+  final _pageCtrl = PageController();
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    _pageCtrl.dispose();
     super.dispose();
   }
 
@@ -27,8 +27,8 @@ class _GameRulesScreenState extends State<GameRulesScreen> {
     backgroundColor: context.read<Palette>().background4,
     body: ResponsiveScreen(
       topSlot: _TopSlot(onTap: context.pop),
-      mainSlot: _MainSlot(controller: _ctrl),
-      bottomSlot: _BottomSlot(controller: _ctrl, onTap: context.pop),
+      mainSlot: _MainSlot(controller: _pageCtrl),
+      bottomSlot: _BottomSlot(controller: _pageCtrl, onTap: context.pop),
     ),
   );
 }
@@ -67,7 +67,7 @@ class _MainSlot extends StatelessWidget {
       Image.asset(
         'assets/imgs/bar.webp',
         fit: .fill,
-        height: View.of(context).physicalSize.height * 0.9,
+        height: MediaQuery.sizeOf(context).height * 0.9,
       ),
       PageView(
         controller: controller,
@@ -99,7 +99,7 @@ class _BottomSlot extends StatelessWidget {
     onTap: () {
       if (controller.page == 5) return onTap();
       controller.nextPage(
-        duration: const Duration(milliseconds: 700),
+        duration: const .new(milliseconds: 700),
         curve: Curves.easeInBack,
       );
     },

@@ -1,5 +1,5 @@
+import 'package:dice_roller/controllers/settings_controller.dart';
 import 'package:dice_roller/router/router.dart';
-import 'package:dice_roller/src/controllers/settings_controller.dart';
 import 'package:dice_roller/utils/palette.dart';
 import 'package:dice_roller/widgets/responsive_screen.dart';
 import 'package:dice_roller/widgets/rough_button.dart';
@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 @immutable
-class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+class GameHomeScreen extends StatelessWidget {
+  const GameHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: context.read<Palette>().backgroundMainSet.dark,
     body: const ResponsiveScreen(
-      mainAreaProminence: 0.45,
       mainSlot: _MainSlot(),
       bottomSlot: _BottomSlot(),
     ),
@@ -28,7 +27,7 @@ class _MainSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: Transform.rotate(
-      angle: -0.1,
+      angle: 6,
       child: const Text(
         'The Dice Roller',
         textAlign: .center,
@@ -44,13 +43,13 @@ class _BottomSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<SettingsController>();
+    final settings = context.watch<SettingsController>();
     final palette = context.read<Palette>();
     return Column(
       mainAxisAlignment: .end,
       children: [
         RoughButton(
-          onTap: () => const PlayRoute().go(context),
+          onTap: () => const GameLevelsRoute().go(context),
           child: const Text('Play'),
         ),
         const SizedBox(height: 10),
@@ -60,14 +59,14 @@ class _BottomSlot extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         RoughButton(
-          onTap: () => const SettingsRoute().go(context),
+          onTap: () => const GameSettingsRoute().go(context),
           child: const Text('Settings'),
         ),
         const SizedBox(height: 40),
         ValueListenableBuilder<bool>(
-          valueListenable: ctrl.muted,
+          valueListenable: settings.muted,
           builder: (context, muted, child) => RoughButton(
-            onTap: ctrl.toggleMuted,
+            onTap: settings.toggleMuted,
             fillColor: muted ? palette.backgroundMainSet.dark : palette.redPen,
             child: Icon(muted ? Icons.volume_off : Icons.volume_up, size: 30),
           ),
