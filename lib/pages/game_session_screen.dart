@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:dice_roller/controllers/progress_controller.dart';
 import 'package:dice_roller/controllers/settings_controller.dart';
@@ -27,7 +28,7 @@ class GameSessionScreen extends StatefulWidget {
 
 class _GameSessionScreenState extends State<GameSessionScreen>
     with SingleTickerProviderStateMixin {
-  late final _anim = AnimationController(
+  late final _animation = AnimationController(
     vsync: this,
     upperBound: 5,
     duration: const Duration(seconds: 3),
@@ -38,18 +39,13 @@ class _GameSessionScreenState extends State<GameSessionScreen>
   bool _animCompleted = false;
   bool _isCelebrating = false;
 
-  Future<void> _playerWon(Iterable<int> values) async {
-    // Let the player see the game just after winning for a bit.
-    await Future<void>.delayed(const Duration(seconds: 1));
+  Future<void> _levelComplete(Iterable<int> values) async {
     setState(() => _isCelebrating = true);
-    if (!mounted) return;
-    context.read<ProgressController>().setLevel(widget.level.level);
-
-    /// Give the player some time to see the celebration animation.
-    await Future<void>.delayed(const Duration(seconds: 5));
+    await Future.delayed(const .new(seconds: 3));
     setState(() => _isCelebrating = false);
 
     if (!mounted) return;
+    context.read<ProgressController>().highestLevel = widget.level.level;
     context.go(
       const GameResultRoute().location,
       extra: GameScore(
@@ -68,15 +64,15 @@ class _GameSessionScreenState extends State<GameSessionScreen>
 
   @override
   void dispose() {
-    _anim.removeStatusListener(_onAnimComplete);
-    _anim.dispose();
+    _animation.removeStatusListener(_onAnimComplete);
+    _animation.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Provider(
-    create: (_) => GameState(level: widget.level, onWin: _playerWon),
-    child: IgnorePointer(
+  Widget build(BuildContext context) => Provider<GameState>(
+    create: (_) => .new(level: widget.level, onComplete: _levelComplete),
+    builder: (context, child) => IgnorePointer(
       ignoring: _isCelebrating,
       child: Scaffold(
         backgroundColor: context.read<Palette>().backgroundPlaySession,
@@ -85,11 +81,15 @@ class _GameSessionScreenState extends State<GameSessionScreen>
             ResponsiveScreen(
               topSlot: const _TopSlot(),
               mainSlot: _MainSlot(
+                animation: _animation,
                 isComplete: _animCompleted && !_isCelebrating,
-                level: widget.level,
-                animation: _anim,
               ),
-              bottomSlot: _BottomSlot(animation: _anim),
+              bottomSlot: _BottomSlot(
+                onTap: () {
+                  context.read<GameState>().reset();
+                  _animation.forward(from: 0);
+                },
+              ),
             ),
             Positioned.fill(
               child: Visibility(
@@ -145,76 +145,63 @@ class _TopSlot extends StatelessWidget {
 }
 
 @immutable
-class _MainSlot extends StatelessWidget {
-  const _MainSlot({
-    required this.isComplete,
-    required this.level,
-    required this.animation,
-  });
+class _BottomSlot extends StatelessWidget {
+  const _BottomSlot({required this.onTap});
 
-  final bool isComplete;
-  final GameLevel level;
-  final AnimationController animation;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      Wrap(
-        spacing: 10,
-        children: [
-          Text(
-            'Player: ${context.read<SettingsController>().player.value}',
-            style: const TextStyle(fontSize: 22),
-          ),
-          Text(
-            'Dices: ${level.dices} | Sides: ${level.sides}',
-            style: const TextStyle(fontSize: 22),
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-      Consumer<GameState>(
-        builder: (_, state, child) {
-          if (isComplete && state.showResults) state.showWinScreen();
-          return LayoutBuilder(
-            builder: (_, constraints) => Wrap(
-              alignment: .spaceAround,
-              children: .generate(level.dices, (index) {
-                return DiceWidget(
-                  animation: animation,
-                  width: (constraints.biggest.width ~/ 3.5).toDouble(),
-                  sidesPerDice: state.level.sides,
-                  diceValue: state.getDiceValueFor(index + 1),
-                  onEnd: (value) => state.setDiceValueFor(index + 1, value),
-                );
-              }),
-            ),
-          );
-        },
-      ),
-    ],
+  Widget build(BuildContext context) => RoughButton(
+    onTap: onTap,
+    padding: .zero,
+    draw: true,
+    child: Text(
+      'ROLL',
+      style: DefaultTextStyle.of(
+        context,
+      ).style.copyWith(fontSize: 64, letterSpacing: 8),
+    ),
   );
 }
 
 @immutable
-class _BottomSlot extends StatelessWidget {
-  const _BottomSlot({required this.animation});
+class _MainSlot extends StatelessWidget {
+  const _MainSlot({required this.animation, required this.isComplete});
 
   final AnimationController animation;
+  final bool isComplete;
 
   @override
   Widget build(BuildContext context) => Consumer<GameState>(
-    builder: (_, state, child) => RoughButton(
-      onTap: () {
-        animation.forward(from: 0);
-        state.reset();
-      },
-      padding: .zero,
-      drawRectangle: true,
-      child: const Text(
-        'Roll',
-        style: TextStyle(fontSize: 30, fontFamily: 'Permanent Marker'),
-      ),
-    ),
+    builder: (_, state, child) {
+      if (isComplete && state.showResults) state.showResultScreen();
+      return Column(
+        children: [
+          ListTile(
+            title: Text(
+              'Hello, ${context.read<SettingsController>().player.value}',
+              style: DefaultTextStyle.of(context).style.copyWith(fontSize: 32),
+            ),
+            subtitle: Text(
+              'Dices: ${state.level.dices} | Sides: ${state.level.sides}',
+            ),
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            alignment: .spaceAround,
+            children: .generate(state.level.dices, (index) {
+              return DiceWidget(
+                animation: animation,
+                diceValue: state.getDiceValueFor(index + 1),
+                onComplete: () => state.setDiceValueFor(
+                  index + 1,
+                  math.Random().nextInt(state.level.sides) + 1,
+                ),
+              );
+            }),
+          ),
+        ],
+      );
+    },
   );
 }

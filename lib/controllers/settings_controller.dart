@@ -19,7 +19,7 @@ class SettingsController {
   final muted = ValueNotifier<bool>(false);
   final music = ValueNotifier<bool>(false);
   final sound = ValueNotifier<bool>(false);
-  final player = ValueNotifier<String>('Player 1');
+  final player = ValueNotifier<String>('Rando!');
 
   /// Asynchronously loads values from the injected persistence store.
   Future<void> load() async {

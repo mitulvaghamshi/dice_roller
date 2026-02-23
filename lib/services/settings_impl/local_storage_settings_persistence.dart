@@ -26,7 +26,7 @@ class LocalStorageSettingsPersistence implements SettingsService {
 
   @override
   Future<String> get player async {
-    return await _prefs.getString('player') ?? 'Player 1';
+    return await _prefs.getString('player') ?? 'Rando!';
   }
 
   @override

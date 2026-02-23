@@ -25,15 +25,38 @@ class _MainSlot extends StatelessWidget {
   const _MainSlot();
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Transform.rotate(
-      angle: 6,
-      child: const Text(
-        'The Dice Roller',
-        textAlign: .center,
-        style: TextStyle(fontSize: 55, height: 1),
+  Widget build(BuildContext context) => Column(
+    mainAxisAlignment: .center,
+    children: [
+      Center(
+        child: Transform.rotate(
+          angle: 6,
+          child: const Text(
+            'The Dice Roller',
+            textAlign: .center,
+            style: TextStyle(fontSize: 55, height: 1),
+          ),
+        ),
       ),
-    ),
+      const SizedBox(height: 60),
+      RoughButton(
+        onTap: () => const GameLevelsRoute().go(context),
+        padding: .symmetric(vertical: 24, horizontal: 32),
+        child: const Text('Play'),
+      ),
+      const SizedBox(height: 24),
+      RoughButton(
+        onTap: () => const GameRulesRoute().push(context),
+        padding: .symmetric(vertical: 24, horizontal: 64),
+        child: const Text('Game Rules'),
+      ),
+      const SizedBox(height: 24),
+      RoughButton(
+        onTap: () => const GameSettingsRoute().go(context),
+        padding: .symmetric(vertical: 24, horizontal: 32),
+        child: const Text('Settings'),
+      ),
+    ],
   );
 }
 
@@ -43,35 +66,22 @@ class _BottomSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.watch<SettingsController>();
+    final settings = context.read<SettingsController>();
     final palette = context.read<Palette>();
     return Column(
       mainAxisAlignment: .end,
       children: [
-        RoughButton(
-          onTap: () => const GameLevelsRoute().go(context),
-          child: const Text('Play'),
-        ),
-        const SizedBox(height: 10),
-        RoughButton(
-          onTap: () => const GameRulesRoute().push(context),
-          child: const Text('Game Rules'),
-        ),
-        const SizedBox(height: 10),
-        RoughButton(
-          onTap: () => const GameSettingsRoute().go(context),
-          child: const Text('Settings'),
-        ),
         const SizedBox(height: 40),
         ValueListenableBuilder<bool>(
           valueListenable: settings.muted,
           builder: (context, muted, child) => RoughButton(
             onTap: settings.toggleMuted,
+            padding: .symmetric(vertical: 24, horizontal: 32),
             fillColor: muted ? palette.backgroundMainSet.dark : palette.redPen,
-            child: Icon(muted ? Icons.volume_off : Icons.volume_up, size: 30),
+            child: Icon(muted ? Icons.volume_off : Icons.volume_up, size: 40),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 40),
       ],
     );
   }

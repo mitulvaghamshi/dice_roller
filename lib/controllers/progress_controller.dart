@@ -40,7 +40,7 @@ class ProgressController extends ChangeNotifier {
   /// Registers [level] as reached.
   /// If this is higher than [highestLevel], it will update that
   /// value and save it to the injected persistence store.
-  void setLevel(int level) {
+  set highestLevel(int level) {
     if (level <= _highestLevel) return;
     _highestLevel = level;
     _service.highestLevel = level;

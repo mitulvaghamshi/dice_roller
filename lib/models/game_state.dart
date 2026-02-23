@@ -2,12 +2,12 @@ import 'package:dice_roller/models/game_levels.dart';
 import 'package:flutter/foundation.dart';
 
 class GameState {
-  GameState({required this.level, required this.onWin}) {
+  GameState({required this.level, required this.onComplete}) {
     reset();
   }
 
   final GameLevel level;
-  final ValueChanged<Iterable<int>> onWin;
+  final ValueChanged<Iterable<int>> onComplete;
 
   final _dice = <int, int>{};
 }
@@ -15,7 +15,7 @@ class GameState {
 extension Utils on GameState {
   bool get showResults => _dice.length == level.dices;
 
-  void showWinScreen() => onWin(_dice.values);
+  void showResultScreen() => Future.microtask(() => onComplete(_dice.values));
 
   void reset() {
     for (var i = 1; i <= level.dices; i++) {

@@ -1,10 +1,10 @@
 name: dice_roller
 description: A casual, interactive, single user, dice rolling game.
-publish_to: none # Prevent accidental publishing to pub.dev.
+
 version: 0.0.1+1
 
 environment:
-  sdk: ^3.10.8
+  sdk: ^3.11.0
 
 dependencies:
   audioplayers: ^6.5.1

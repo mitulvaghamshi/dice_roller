@@ -12,7 +12,7 @@ class RoughButton extends StatelessWidget {
     required this.onTap,
     this.fillColor,
     this.enabled = true,
-    this.drawRectangle = false,
+    this.draw = false,
     this.imageName = 'assets/imgs/bar.webp',
     this.padding = const .symmetric(vertical: 16, horizontal: 32),
   });
@@ -20,7 +20,7 @@ class RoughButton extends StatelessWidget {
   final Widget child;
   final Color? fillColor;
   final bool enabled;
-  final bool drawRectangle;
+  final bool draw;
   final String imageName;
   final EdgeInsetsGeometry padding;
   final VoidCallback onTap;
@@ -35,17 +35,15 @@ class RoughButton extends StatelessWidget {
         if (!muted) await AudioManager.playAsset('clips/start.mp3');
       },
       padding: padding,
-      elevation: 5,
-      disabledElevation: 5,
-      splashColor: Colors.deepOrange,
+      splashColor: palette.pen,
       fillColor: enabled
           ? (fillColor ?? palette.backgroundButton)
           : palette.backgroundLevelSelection,
       constraints: const BoxConstraints(minWidth: 50, minHeight: 50),
-      shape: BeveledRectangleBorder(borderRadius: .circular(16)),
+      shape: BeveledRectangleBorder(borderRadius: .circular(32), side: .new()),
       child: Stack(
         alignment: .center,
-        children: [if (drawRectangle) Image.asset(imageName), child],
+        children: [if (draw) Image.asset(imageName), child],
       ),
     );
   }

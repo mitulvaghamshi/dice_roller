@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 @immutable
@@ -8,16 +6,12 @@ class DiceWidget extends StatefulWidget {
     super.key,
     required this.animation,
     required this.diceValue,
-    required this.width,
-    required this.sidesPerDice,
-    required this.onEnd,
+    required this.onComplete,
   });
 
   final Animation<double> animation;
-  final double width;
   final int diceValue;
-  final int sidesPerDice;
-  final ValueChanged<int> onEnd;
+  final VoidCallback onComplete;
 
   @override
   State<DiceWidget> createState() => _DiceWidgetState();
@@ -25,9 +19,7 @@ class DiceWidget extends StatefulWidget {
 
 class _DiceWidgetState extends State<DiceWidget> {
   void _onComplete(AnimationStatus status) {
-    if (status == .completed) {
-      widget.onEnd(math.Random().nextInt(widget.sidesPerDice) + 1);
-    }
+    if (status == .completed) widget.onComplete();
   }
 
   @override
@@ -48,7 +40,7 @@ class _DiceWidgetState extends State<DiceWidget> {
     child: Image.asset(
       'assets/dices/dice_${widget.diceValue}.webp',
       fit: .contain,
-      width: widget.width,
+      width: MediaQuery.sizeOf(context).shortestSide / 3.5,
       semanticLabel: 'Dice with ${widget.diceValue} numbers.',
     ),
   );

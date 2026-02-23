@@ -49,6 +49,7 @@ class MainApp extends StatelessWidget {
               ),
               textTheme: TextTheme(
                 bodyMedium: TextStyle(
+                  fontSize: 22,
                   color: palette.ink,
                   fontFamily: 'Permanent Marker',
                 ),

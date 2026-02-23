@@ -103,7 +103,7 @@ class _BottomSlot extends StatelessWidget {
         curve: Curves.easeInBack,
       );
     },
-    drawRectangle: true,
+    draw: true,
     child: RotatedBox(
       quarterTurns: 2,
       child: Image.asset('assets/imgs/back.webp'),
